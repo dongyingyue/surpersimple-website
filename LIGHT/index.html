@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光源应用</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            z-index: 1000;
+        }
+
+        .slider-container {
+            margin: 15px 0;
+        }
+
+        .slider {
+            width: 100%;
+            margin: 15px 0;
+            height: 20px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <button class="fullscreen-btn" id="fullscreenBtn">
+        全屏
+    </button>
+    <div class="controls">
+        <div class="slider-container">
+            <label for="brightness">亮度</label>
+            <input type="range" id="brightness" class="slider" min="0" max="100" value="50">
+        </div>
+        <div class="slider-container">
+            <label for="temperature">色温</label>
+            <input type="range" id="temperature" class="slider" min="0" max="100" value="50">
+        </div>
+    </div>
+
+    <script>
+        const brightnessSlider = document.getElementById('brightness');
+        const temperatureSlider = document.getElementById('temperature');
+        const body = document.body;
+
+        function updateLight() {
+            const brightness = brightnessSlider.value;
+            const temperature = temperatureSlider.value;
+            
+            // 将色温值转换为RGB颜色
+            // 0 = 冷色调（偏蓝），100 = 暖色调（偏黄）
+            const blue = Math.round(255 * (1 - temperature / 100));
+            const red = Math.round(255 * (temperature / 100));
+            const green = Math.round(red * 0.8); // 稍微减少绿色分量使颜色更自然
+            
+            // 使用亮度值调整RGB颜色
+            const brightnessMultiplier = brightness / 100;
+            const finalRed = Math.round(red * brightnessMultiplier);
+            const finalGreen = Math.round(green * brightnessMultiplier);
+            const finalBlue = Math.round(blue * brightnessMultiplier);
+            
+            body.style.backgroundColor = `rgb(${finalRed}, ${finalGreen}, ${finalBlue})`;
+        }
+
+        brightnessSlider.addEventListener('input', updateLight);
+        temperatureSlider.addEventListener('input', updateLight);
+        
+        // 初始化页面
+        updateLight();
+
+        // 添加全屏功能
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`全屏请求失败: ${err.message}`);
+                });
+                fullscreenBtn.textContent = '退出全屏';
+            } else {
+                document.exitFullscreen();
+                fullscreenBtn.textContent = '全屏';
+            }
+        });
+
+        // 监听全屏变化
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                fullscreenBtn.textContent = '全屏';
+            }
+        });
+    </script>
+</body>
+</html> 
