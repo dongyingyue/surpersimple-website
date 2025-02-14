@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>五子棋</title>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+        }
+
+        #gameInfo {
+            margin-bottom: 20px;
+            font-size: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        #newGame {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(15, 40px);
+            grid-template-rows: repeat(15, 40px);
+            background-color: #DEB887;
+            gap: 1px;
+            padding: 1px;
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+            background-color: #DEB887;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cell::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #000;
+        }
+
+        .cell::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            background-color: #000;
+        }
+
+        .piece {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            z-index: 1;
+        }
+
+        .black {
+            background: radial-gradient(circle at 30% 30%, #666, #000);
+        }
+
+        .white {
+            background: radial-gradient(circle at 30% 30%, #fff, #ccc);
+        }
+
+        .current-player {
+            font-weight: bold;
+            color: #f00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="gameInfo">
+            <button id="newGame">新游戏</button>
+            <span id="timer">剩余时间: 30秒</span>
+            <span id="currentPlayer">当前回合: 黑方</span>
+        </div>
+        <div id="board"></div>
+        <div id="result" style="margin-top: 20px; font-size: 24px;"></div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html> 
